@@ -122,15 +122,32 @@ MRR_gauss_diff = gauss_spec.*Hr1;
 MRR_gauss_diff_power_spec=abs(MRR_gauss_diff).^2;
 
 subplot(1,2,1)
-plot(double_f*1e-9,MRR_gauss_diff_power_spec,'g','linewidth',2.5);title('模型微环传输功率谱');hold on;
+plot(double_f*1e-9,MRR_gauss_diff_power_spec,'g','linewidth',2.5);
 subplot(1,2,2)
-plot(double_f*1e-9,MRR_gauss_diff,'g','linewidth',2.5);title('模型微环输出频谱');hold on;
-
-figure;
+plot(double_f*1e-9,MRR_gauss_diff,'g','linewidth',2.5);
 
 
-
-
+%%%%%%%%%%test%%%%%%%%%%
+% 
+% R=20e-6;
+% %neff=3.179992;
+% neff=2.5;
+% r=0.98;
+% %yt=0.999;
+% Lc = R;
+% L = 2*pi*R+2*Lc;
+% phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
+% p=exp(1i*phi);
+% taoa=0.98;
+% 
+% %Ta1= exp(1i*(pi+phi)).*(taoa-r.*exp(-1i*phi))./(1-r.*taoa.*exp(1i*phi));
+% Ta1= (r-taoa.*p)./(1-r.*taoa.*p);
+% %Ta1= exp(1i*(pi+phi)).*(taoa*(yt)-r.*exp(-1i*phi))./(1-r.*taoa*(yt).*exp(1i*phi));
+% TT1=abs(Ta1);
+% %Ta1=r*((1-yt*p)/(1-r^2*yt*p))
+% figure;
+% 
+% plot(v,TT1,'g','linewidth',2); xlabel('Frequency(Hz）');ylabel('Tran_Response');hold on;
 
 
 
