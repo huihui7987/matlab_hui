@@ -153,14 +153,13 @@ Ta2= exp(1i*(pi+phi)).*(taob-r.*exp(-1i*phi))./(1-r.*taob.*exp(1i*phi));
 T2= (abs(Ta2)).^2;%~~~~-
 PHI2 = angle(Ta2);%~~
 
-taoc=0.846;
+taoc=0.846;%1.5阶，对应n1=1.5
 Ta3= exp(1i*(pi+phi)).*(taoc-r.*exp(-1i*phi))./(1-r.*taoc.*exp(1i*phi));
 T3= (abs(Ta3)).^2;%~~~~-
 PHI3 = angle(Ta3);%~~
 if r<=taoa
     PHI3 = PHI3+(PHI3<0)*2*pi ;
 end
-
 
 ffff =Ta2 .* gauss_spec;
 
@@ -185,6 +184,14 @@ subplot(1,3,1);
 plot(v,Ta2,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Ta1');hold on;
 subplot(1,3,2);
 plot(v,gauss_spec,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('gauss_spec');hold on;
+
+
+figure;
+
+plot(double_f*1e-9,idea_gauss_diff_power_spec/4.8,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('理想微分功率谱');hold on;
+plot(double_f*1e-9,MRR_gauss_diff_power_spec/4.86,'g','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('模型微环传输功率谱');hold on;
+plot(double_f*1e-9,abs(ffff).^2/3.5/1e-6/0.9397,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('MMR_based微分输出功率谱');hold on;
+
 
 
 
