@@ -2,7 +2,7 @@ clc;
 clear;
 FWHM=50e-12;            %¸ßË¹ÐÅºÅFWHM¿í¶È£¬Îª50ps
 time_window=100*FWHM;   %¸ßË¹ÐÅºÅµÄ²ÉÑù´°¿Ú¿í¶È£¬¸ÃÖµ¾ö¶¨ÁË¸µÀïÒ¶±ä»»ºóµÄÆµÂÊ·Ö±æÂÊ
-Ns=2048;                %²ÉÑùµã
+Ns=601;                %²ÉÑùµã
 dt=time_window/(Ns-1);  %²ÉÑùÊ±¼ä¼ä¸ô
 t=0:dt:time_window;     %²ÉÑùÊ±¼ä
 
@@ -126,7 +126,65 @@ plot(double_f*1e-9,MRR_gauss_diff_power_spec,'g','linewidth',2.5);title('Ä£ÐÍÎ¢»
 subplot(1,2,2)
 plot(double_f*1e-9,MRR_gauss_diff,'g','linewidth',2.5);title('Ä£ÐÍÎ¢»·Êä³öÆµÆ×');hold on;
 
+
+%%%%%%%%%%¸ßË¹º¯Êý¾­¹ýÊµ¼ÊÎ¢»·Ö®ºó%%%%%%%%´Ë´¦»òÐí»¹ÓÐÎÊÌâ£¬ÔÝÊ±»¹Ã»ÓÐ±©Â¶20160531_23:10
+
+R=50e-6;
+lamda=1439.2e-9:1e-12:1439.8e-9;
+v=(3e8./lamda)-(3e8./1439.5e-9);
+neff=3.17995709;
+%neff=3.17996;
+r=0.83;
+
+L = 2*pi*R;
+phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
+taoa=0.83;
+Ta1= exp(1i*(pi+phi)).*(taoa-r.*exp(-1i*phi))./(1-r.*taoa.*exp(1i*phi));
+%Ta1= (taoa-r)./(1-r.*taoa);
+T1= (abs(Ta1)).^2;%~~~~-
+%T = (tao^2-2*r*tao*cos(phi)+r^2)./(1-2*r*tao*cos(phi)+r^2*tao^2);
+PHI1 = angle(Ta1);%~~~~-
+if r<=taoa
+    PHI1 = PHI1+(PHI1<0)*2*pi ;
+end
+%PHI=pi+phi+atan((r.*sin(phi))./(tao-r.*cos(phi)))+atan((r*tao.*sin(phi))./(1-tao*r.*cos(phi)))
+taob=0.801;
+Ta2= exp(1i*(pi+phi)).*(taob-r.*exp(-1i*phi))./(1-r.*taob.*exp(1i*phi));
+T2= (abs(Ta2)).^2;%~~~~-
+PHI2 = angle(Ta2);%~~
+
+taoc=0.846;
+Ta3= exp(1i*(pi+phi)).*(taoc-r.*exp(-1i*phi))./(1-r.*taoc.*exp(1i*phi));
+T3= (abs(Ta3)).^2;%~~~~-
+PHI3 = angle(Ta3);%~~
+if r<=taoa
+    PHI3 = PHI3+(PHI3<0)*2*pi ;
+end
+
+
+ffff =Ta2 .* gauss_spec;
+
 figure;
+subplot(1,2,1);
+plot(double_f,T1,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,T2,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,T3,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+legend('Critical-coupled','Under-coupled','Over-coupled')
+subplot(1,2,2);
+plot(v,PHI1,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
+plot(v,PHI2,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
+plot(v,PHI3,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
+legend('Critical-coupled','Under-coupled','Over-coupled')
+%subplot(1,3,3);plot(v,y3,'linewidth',2);title('n=1.5');
+figure;
+%subplot(1,3,3);
+plot(double_f,abs(ffff).^2/3.5/1e-6/0.9397,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('res');hold on;
+
+figure;
+subplot(1,3,1);
+plot(v,Ta2,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Ta1');hold on;
+subplot(1,3,2);
+plot(v,gauss_spec,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('gauss_spec');hold on;
 
 
 
