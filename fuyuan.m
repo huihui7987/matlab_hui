@@ -177,7 +177,7 @@ legend('Critical-coupled','Under-coupled','Over-coupled')
 %subplot(1,3,3);plot(v,y3,'linewidth',2);title('n=1.5');
 figure;
 %subplot(1,3,3);
-plot(double_f,abs(ffff).^2/3.5/1e-6/0.9397,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('res');hold on;
+plot(double_f,abs(ffff).^2/4/1e-6,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('res');hold on;
 
 figure;
 subplot(1,3,1);
@@ -188,9 +188,9 @@ plot(v,gauss_spec,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('gauss_spe
 
 figure;
 
-plot(double_f*1e-9,idea_gauss_diff_power_spec/4.8,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('理想微分功率谱');hold on;
+plot(double_f*1e-9,idea_gauss_diff_power_spec/4.84,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('理想微分功率谱');hold on;
 plot(double_f*1e-9,MRR_gauss_diff_power_spec/4.86,'g','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('模型微环传输功率谱');hold on;
-plot(double_f*1e-9,abs(ffff).^2/3.5/1e-6/0.9397,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('MMR_based微分输出功率谱');hold on;
+plot(double_f*1e-9,abs(ffff).^2/4/1e-6,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('MMR_based微分输出功率谱');hold on;
 
 
 
