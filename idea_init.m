@@ -1,6 +1,6 @@
 clear all
 R=50e-6;
-lamda=1439.2e-9:1e-12:1439.8e-9;
+lamda=1439e-9:1e-12:1440e-9;
 v=(3e8./lamda)-(3e8./1439.5e-9);
 neff=3.17995709;
 %neff=3.17996;
@@ -8,7 +8,7 @@ r=0.83;
 
 FWHM=50e-12;            %高斯信号FWHM宽度，为50ps
 time_window=100*FWHM;   %高斯信号的采样窗口宽度，该值决定了傅里叶变换后的频率分辨率
-Ns=601;                %采样点
+Ns=1001;                %采样点
 dt=time_window/(Ns-1);  %采样时间间隔
 %dt=1e-12;
 t=0:dt:time_window;     %采样时间
@@ -19,7 +19,9 @@ xlabel('Time/ns');
 ylabel('Amplitude/V');
 title('Gauss pulse');
 %===========以下计算双边谱、双边功率谱、双边功率谱密度=================
-gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
+%gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
+gauss_spec=fftshift(fft((gauss_time)));  
+
 gauss_spec=gauss_spec/Ns;   %求实际的幅度值；
 
 df=1/time_window;               %频率分辨率
@@ -81,10 +83,10 @@ plot(v,gauss_spec,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('gauss_spe
 
 
 %%%%%%%%%%%%%频域2时域%%%%%%
-x_out_bas = ifft(ifftshift(abs(ffff)));%~~~~ 微分结果时域
+x_out_bas = (ifft((ffff)));%~~~~ 微分结果时域
 
 figure;
-plot(double_f,x_out_bas,'r','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('微分时域');hold on;
+plot(v,abs(x_out_bas)/0.0003459,'r','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('微分时域');hold on;
 
 
 

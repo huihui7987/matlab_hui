@@ -21,7 +21,8 @@ xlabel('Time/ns');
 ylabel('Amplitude/V');
 title('Gauss pulse');
 %===========以下计算双边谱、双边功率谱、双边功率谱密度=================
-gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行fftshift移位操作。
+%gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行fftshift移位操作。
+gauss_spec=fft(ifftshift(gauss_time));
 gauss_spec=gauss_spec/Ns;   %求实际的幅度值；
 df=1/time_window;               %频率分辨率
 k=floor(-(Ns-1)/2:(Ns-1)/2);    
@@ -108,3 +109,8 @@ plot(single_f*1e-9,single_power_specD_mW,'linewidth',2.5);
 xlabel('Frequency/GHz');
 ylabel('Power/(dBm/Hz)');
 title('single power spectrum density');
+
+figure;%验证ifft
+
+x_out_bas = ifftshift(ifft((gauss_spec)));%~~~~ 微分结果时域
+plot(t*1e+9,x_out_bas,'linewidth',2.5);xlabel('Time/ns');ylabel('Amplitude/V');title('时域');
