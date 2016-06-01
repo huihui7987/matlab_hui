@@ -55,7 +55,7 @@ if r<=taoa
 end
 
 
-ffff =Ta2 .* gauss_spec;
+ffff =Ta1 .* gauss_spec;
 
 
 subplot(1,2,1);

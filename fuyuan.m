@@ -161,7 +161,7 @@ if r<=taoa
     PHI3 = PHI3+(PHI3<0)*2*pi ;
 end
 
-ffff =Ta2 .* gauss_spec;
+ffff =Ta3 .* gauss_spec;
 
 figure;
 subplot(1,2,1);
@@ -181,7 +181,7 @@ plot(double_f,abs(ffff).^2/4/1e-6,'r','linewidth',2); xlabel('Frequency(Hz£©');y
 
 figure;
 subplot(1,3,1);
-plot(v,Ta2,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Ta1');hold on;
+plot(v,Ta3,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Ta3');hold on;
 subplot(1,3,2);
 plot(v,gauss_spec,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('gauss_spec');hold on;
 
