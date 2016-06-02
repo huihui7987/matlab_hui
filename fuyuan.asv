@@ -196,10 +196,8 @@ idea_gauss_diff_power_spec_v=(abs(idea_gauss_diff_v)).^2;
 
 plot(double_f*1e-9,idea_gauss_diff_power_spec/4.84,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('理想微分1.5阶功率谱');hold on;
 plot(double_f*1e-9,MRR_gauss_diff_power_spec/4.86,'g','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('模型微环传输功率谱');hold on;
-plot(double_f*1e-9,abs(ffff).^2/4/1e-6/0.996,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('MMR_based微分输出功率谱');hold on;
+plot(double_f*1e-9,abs(ffff).^2/4/1e-6/0,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('MMR_based微分输出功率谱');hold on;
 plot(double_f*1e-9,idea_gauss_diff_power_spec_v/7.132/1e-3,'y','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');title('理想微分0.66阶功率谱');hold on;
-
-plot(double_f*1e-9,double_power_spec_mW/0.1132,'linewidth',2.5);
 
 
 
