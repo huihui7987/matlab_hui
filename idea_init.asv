@@ -23,7 +23,7 @@ title('Gauss pulse');
 gauss_spec=fftshift(fft((gauss_time)));
 
 %%%%0602,test%%%%%%%%%%%%%
-gauss_spec_v = fft(fftshift(gauss_time));
+gauss_spec_v = fft(ifftshift(gauss_time));
 gauss_spec_v=gauss_spec_v/Ns;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -64,8 +64,6 @@ end
 
 ffff =Ta2 .* gauss_spec;
 
-ffff_v = Ta2 .*gauss_spec_v;
-
 
 subplot(1,2,1);
 plot(double_f,T1,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Intensity Transmission');hold on;
@@ -95,15 +93,6 @@ x_out_bas = (ifft((ffff)));%~~~~ 微分结果时域
 figure;
 plot(v,abs(x_out_bas)/0.0003459,'r','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('微分时域');hold on;
 
-figure
-
-x_out_bas_v = ifftshift(ifft(ffff_v));
-plot(v,abs(x_out_bas_v),'r','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('微分时域');hold on;
-
-
-figure;
-hh = Ta1.^5;
-plot(v,abs(hh),'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Ta1');hold on;
 
 
 
