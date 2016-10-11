@@ -2,9 +2,24 @@ clc;
 clear;
 FWHM=50e-12;            %高斯信号FWHM宽度，为50ps
 time_window=100*FWHM;   %高斯信号的采样窗口宽度，该值决定了傅里叶变换后的频率分辨率
-Ns=601;                %采样点
+Ns=1601;                %采样点
 dt=time_window/(Ns-1);  %采样时间间隔
 t=0:dt:time_window;     %采样时间
+
+R=50e-6;
+%lamda=1545.45e-9:1e-12:1546.15e-9;
+lamda=1545e-9:1e-12:1546.6e-9;
+v=(3e8./lamda)-(3e8./1545.8e-9);
+%neff=3.1799883;
+neff = 3.1799882;%小，右边高
+r=0.88;
+%yt=0.999;
+Lc = R;
+L = 2*pi*R+2*Lc;
+phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
+p=exp(1i*phi);
+taoa=0.88;
+yt=0.999;
 
 % n1=1.5;
 % n2=0.66;
@@ -17,8 +32,8 @@ ylabel('Amplitude/V');
 title('Gauss pulse');
 
 %===========以下计算双边谱、双边功率谱、双边功率谱密度=================
-gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
-%gauss_spec=fftshift(gauss_time); 
+%gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
+gauss_spec=fftshift(fft((gauss_time)));
 gauss_spec=gauss_spec/Ns;   %求实际的幅度值；归一化？
 df=1/time_window;               %频率分辨率
 k=floor(-(Ns-1)/2:(Ns-1)/2);    
@@ -148,27 +163,48 @@ MRR_gauss_diff_power_spec=abs(MRR_gauss_diff).^2;
 subplot(1,2,1)
 plot(double_f*1e-9,MRR_gauss_diff_power_spec,'g','linewidth',2.5);title('模型微环传输功率谱');hold on;
 subplot(1,2,2)
-plot(double_f*1e-9,MRR_gauss_diff,'g','linewidth',2.5);title('模型微环输出频谱');hold on;
+plot(double_f*1e-9,abs(MRR_gauss_diff),'g','linewidth',2.5);title('模型微环输出频谱');hold on;
 
 
 %%%%%%%%%%高斯函数经过实际微环之后%%%%%%%%此处或许还有问题，暂时还没有暴露20160531_23:10
 
-R=50e-6;
-lamda=1439.2e-9:1e-12:1439.8e-9;
-v=(3e8./lamda)-(3e8./1439.5e-9);
-neff=3.17995709;
-%neff=3.17996;
-r=0.83;
+% R=50e-6;
+% lamda=1439.2e-9:1e-12:1439.8e-9;
+% v=(3e8./lamda)-(3e8./1439.5e-9);
+% %neff=3.179992;
+% neff = 3.15;
+% r=0.98;
+% %yt=0.999;
+% Lc = R;
+% L = 2*pi*R+2*Lc;
+% phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
+% p=exp(1i*phi);
+% taoa=0.98;
+% yt=0.999;
 
-L = 2*pi*R;
-phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
-p=exp(1i*phi/2);
+% R=50e-6;
+% %lamda=1545.45e-9:1e-12:1546.15e-9;
+% % lamda=1545.2e-9:1e-12:1546.4e-9;
+% v=(3e8./lamda)-(3e8./1545.8e-9);
+% neff=3.1799883;
+% %neff = 3.17999;
+% r=0.98;
+% %yt=0.999;
+% Lc = R;
+% L = 2*pi*R+2*Lc;
+% phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
+% p=exp(1i*phi);
+% taoa=0.98;
+% yt=0.999;
 
-taoa=0.83;
-%Ta1=
-%exp(1i*(pi+phi)).*(taoa-r.*exp(-1i*phi))./(1-r.*taoa.*exp(1i*phi));%晋博源公式，可以
-%Ta1= (taoa-r)./(1-r.*taoa);
-Ta1 = (r-taoa*p.^2)./(1-taoa*r*p.^2);%华科公式，可以
+%Ta1= exp(1i*(pi+phi)).*(taoa-r.*exp(-1i*phi))./(1-r.*taoa.*exp(1i*phi));
+Ta1= (r-taoa.*p)./(1-r.*taoa.*p);%%%%%%%%
+%Ta1 = r*((1-taoa*yt^4.*p)./(1-r^2*taoa*yt^4.*p));
+%Ta1= exp(1i*(pi+phi)).*(taoa*(yt)-r.*exp(-1i*phi))./(1-r.*taoa*(yt).*exp(1i*phi));
+
+%Ta1=r*((1-yt*p)/(1-r^2*yt*p))
+
+
 T1= (abs(Ta1)).^2;%~~~~-
 %T = (tao^2-2*r*tao*cos(phi)+r^2)./(1-2*r*tao*cos(phi)+r^2*tao^2);
 PHI1 = angle(Ta1);%~~~~-
@@ -176,27 +212,31 @@ if r<=taoa
     PHI1 = PHI1+(PHI1<0)*2*pi ;
 end
 %PHI=pi+phi+atan((r.*sin(phi))./(tao-r.*cos(phi)))+atan((r*tao.*sin(phi))./(1-tao*r.*cos(phi)))
-taob=0.801;%对应0.4阶
-%Ta2= exp(1i*(pi+phi)).*(taob-r.*exp(-1i*phi))./(1-r.*taob.*exp(1i*phi));
-Ta2 = (r-taob*p.^2)./(1-taob*r*p.^2);
-T2= (abs(Ta2)).^2;%~~~~-
-PHI2 = angle(Ta2);%~~
 
-taoc=0.846;%1.5阶，对应n1=1.5
-%Ta3= exp(1i*(pi+phi)).*(taoc-r.*exp(-1i*phi))./(1-r.*taoc.*exp(1i*phi));
-Ta3 = (r-taoc*p.^2)./(1-taoc*r*p.^2);
-T3= (abs(Ta3)).^2;%~~~~-
-PHI3 = angle(Ta3);%~~
-if r<=taoa
+taob=0.875;
+Ta2= (r-taob.*p)./(1-r.*taob.*p);
+%Ta2 = r*((1-taob*yt^4.*p)./(1-r^2*taob*yt^4.*p));
+T2= (abs(Ta2)).^2;
+PHI2 = angle(Ta2);
+if r<=taob
+    PHI2 = PHI2+(PHI2<0)*2*pi ;
+end
+
+taoc=0.89;
+Ta3= (r-taoc.*p)./(1-r.*taoc.*p);
+%Ta3 = r*((1-taoc*yt^4.*p)./(1-r^2*taoc*yt^4.*p));
+T3= (abs(Ta3)).^2;
+PHI3 = angle(Ta3);
+if r<=taoc
     PHI3 = PHI3+(PHI3<0)*2*pi ;
 end
 
 ff_o =Ta3 .* gauss_spec;
 ff_u = Ta2 .* gauss_spec;
-ff_c = Ta1 .*gauss_spec;
+
 figure;
 subplot(1,2,1);
-plot(double_f,T1,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Intensity Transmission');hold on;
+plot(v,T1,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Intensity Transmission');hold on;
 plot(v,T2,'b','linewidth',2); xlabel('Frequency(Hz）');ylabel('Intensity Transmission');hold on;
 plot(v,T3,'g','linewidth',2); xlabel('Frequency(Hz）');ylabel('Intensity Transmission');hold on;
 legend('Critical-coupled','Under-coupled','Over-coupled')
@@ -223,47 +263,52 @@ H2=(1i*2*pi*double_f*1e-9).^(n2);
 idea_gauss_diff_v=gauss_spec.*H2;
 %理想微分功率谱
 idea_gauss_diff_power_spec_v=(abs(idea_gauss_diff_v)).^2;
-plot(double_f*1e-9,double_power_spec_mW/0.1132,'k','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('输入高斯脉冲功率谱');
+
 plot(double_f*1e-9,idea_gauss_diff_power_spec/4.84,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('理想微分1.5阶功率谱');
 %plot(double_f*1e-9,MRR_gauss_diff_power_spec/4.86,'g','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('模型微环传输功率谱');
-plot(double_f*1e-9,abs(ff_o).^2/4/1e-6/0.996,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('MMR_based微分输出功率谱');
+plot(double_f*1e-9,abs(ff_o).^2/4/1e-6/0.996/18.84,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('MMR_based微分输出功率谱');
 %plot(double_f*1e-9,idea_gauss_diff_power_spec_v/7.132/1e-3,'y','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('理想微分0.66阶功率谱');
-%plot(double_f*1e-9,double_power_spec_mW/0.1132,'k','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');%title('输入高斯脉冲功率谱');
-legend('Input','ideal n=1.5','Ring based n=1.5')
-%%%%%%%%%%%%%%%%%%%%%%1阶
-figure;
-nn=1;
-H_idea_c=(1i*2*pi*double_f*1e-9).^(nn);%1阶理想
-idea_gauss_diff_c=gauss_spec.*H_idea_c;
-%i阶理想微分功率谱
-idea_gauss_diff_power_spec_c=(abs(idea_gauss_diff_c)).^2;
-%1阶微环
+plot(double_f*1e-9,double_power_spec_mW/0.1132,'k','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');%title('输入高斯脉冲功率谱');
+legend('ideal n=1.5','mod n=1.5','Ring based n=1.5','Ring based n=0.66','Input')
 
+figure;
+%%%%微环一阶微分与输入脉冲同图
+H_ide_1st = 1i*2*pi*double_f*1e-9;
+H_1st = -exp(-1i*v*t0).*H_ide_1st;%建模型
+H_1st_idel = gauss_spec.*H_ide_1st;%理想输出
+H_1st_Mrr = gauss_spec.*Ta1;%Mrr输出
+H_1st_res = gauss_spec.*H_1st;%模型输出
 plot(double_f*1e-9,double_power_spec_mW/0.1132,'k','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('输入高斯脉冲功率谱');
-plot(double_f*1e-9,idea_gauss_diff_power_spec_c/0.09242,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('理想微分1阶功率谱');
-plot(double_f*1e-9,abs(ff_c).^2/(3.506e-6),'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('MMR_based微分输出功率谱');
-legend('Input','ideal n=1','Ring based n=1')
+plot(double_f*1e-9,abs(H_1st_idel).^2/0.09218,'r','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('理想一阶微分输出功率谱');
+plot(double_f*1e-9,abs(H_1st_Mrr).^2/(6.325e-5),'g','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('MMR一阶微分输出功率谱');
+%plot(double_f*1e-9,abs(H_1st_res).^2/0.09243,'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('模型一阶微分输出功率谱');
+legend('Input','ideal n=1','Ring based n=1');
 
-%%%%%%%%%%%%%0.4阶
+%%%%%%%%%%%%%%%%%%%%时域验证
 figure;
-nm=0.4;
-H_idea_u=(1i*2*pi*double_f*1e-9).^(nm);%0.4阶理想
-idea_gauss_diff_u=gauss_spec.*H_idea_u;
-%i阶理想微分功率谱
-idea_gauss_diff_power_spec_u=(abs(idea_gauss_diff_u)).^2;
-%1阶微环
+Mrr_t_out =ifft(H_1st_Mrr);
 
-plot(double_f*1e-9,double_power_spec_mW/0.1132,'k','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('输入高斯脉冲功率谱');
-plot(double_f*1e-9,idea_gauss_diff_power_spec_u/0.001145,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('理想微分1阶功率谱');
-plot(double_f*1e-9,abs(ff_u).^2/(3.281e-6),'b','linewidth',2.5);xlabel('Frequency(GHz）');ylabel('power(a.u.)');hold on;%title('MMR_based微分输出功率谱');
-legend('Input','ideal n=0.4','Ring based n=0.4')
-
-%%%%%%%%%%%%%时域验证%%%%%%%%
-%%%1阶%%%%%%%%
-%%1阶理想
+ide_t_out = ifft(H_1st_idel);%1阶理想
+plot(t*1e+9,abs(Mrr_t_out),'r','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('微环微分时域');hold on;
 figure;
-idea_t_c = ifftshift(idea_gauss_diff_c);
-plot(t*1e+9,idea_t_c,'linewidth',2.5);
+plot(t*1e+9,abs(ide_t_out),'g','linewidth',2); xlabel('Time/ns');ylabel('Amplitude/V');title('理想微分时域');hold on;
+
+%%%%%%%%%%%%%%%%%相位验证
+figure;
+
+plot(v,PHI2,'r','linewidth',2); xlabel('Frequency(Hz）');ylabel('Phase Response');hold on;
+phi_under_out = angle((-1i*2*pi*double_f*1e-9).^(0.7));
+plot(v,phi_under_out,'b','linewidth',2); xlabel('Frequency(Hz）');ylabel('Phase Response');hold on;
+
+
+
+
+
+
+
+
+
+
 
 
 

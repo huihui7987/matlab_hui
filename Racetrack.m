@@ -1,18 +1,20 @@
 clear all
-R=50e-6;
+R=75e-6;
 lamda=1545.45e-9:1e-12:1546.15e-9;
 v=(3e8./lamda)-(3e8./1545.8e-9);
 neff=3.179992;
-r=0.98;
+%neff = 2.65;
+r=0.88;
 %yt=0.999;
 Lc = R;
 L = 2*pi*R+2*Lc;
 phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
 p=exp(1i*phi);
-taoa=0.98;
-
+taoa=0.88;
+yt=0.999;
 %Ta1= exp(1i*(pi+phi)).*(taoa-r.*exp(-1i*phi))./(1-r.*taoa.*exp(1i*phi));
-Ta1= (r-taoa.*p)./(1-r.*taoa.*p);
+Ta1= (r-taoa.*p)./(1-r.*taoa.*p);%%%%%%%%
+%Ta1 = r*((1-taoa*yt^4.*p)./(1-r^2*taoa*yt^4.*p));
 %Ta1= exp(1i*(pi+phi)).*(taoa*(yt)-r.*exp(-1i*phi))./(1-r.*taoa*(yt).*exp(1i*phi));
 
 %Ta1=r*((1-yt*p)/(1-r^2*yt*p))
@@ -26,16 +28,18 @@ if r<=taoa
 end
 %PHI=pi+phi+atan((r.*sin(phi))./(tao-r.*cos(phi)))+atan((r*tao.*sin(phi))./(1-tao*r.*cos(phi)))
 
-taob=0.97;
+taob=0.875;
 Ta2= (r-taob.*p)./(1-r.*taob.*p);
+%Ta2 = r*((1-taob*yt^4.*p)./(1-r^2*taob*yt^4.*p));
 T2= (abs(Ta2)).^2;
 PHI2 = angle(Ta2);
 if r<=taob
     PHI2 = PHI2+(PHI2<0)*2*pi ;
 end
 
-taoc=0.99;
+taoc=0.890;
 Ta3= (r-taoc.*p)./(1-r.*taoc.*p);
+%Ta3 = r*((1-taoc*yt^4.*p)./(1-r^2*taoc*yt^4.*p));
 T3= (abs(Ta3)).^2;
 PHI3 = angle(Ta3);
 if r<=taoc
@@ -52,4 +56,12 @@ figure;
 plot(v,PHI1,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
 plot(v,PHI2,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
 plot(v,PHI3,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
-legend('Critical-coupled','Under-coupled','Over-coupled')
+set(gca,'YTick',[-pi:pi/2:2*pi]);
+set(gca,'ytickLabel',{'-¦Ð','-0.5¦Ð','0','0.5¦Ð','¦Ð','1.5¦Ð','2¦Ð'});
+legend('Critical-coupled','Under-coupled','Over-coupled');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+plot(v,PHI2,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response');hold on;
+

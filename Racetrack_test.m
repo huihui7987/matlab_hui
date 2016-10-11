@@ -56,4 +56,12 @@ plot(v,PHI3,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Phase Response'
 legend('Critical-coupled','Under-coupled','Over-coupled')
 figure;
 
-plot(v,TT1,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Tran_Response');hold on;
+Tda= taoa.*(r-1).^2./(1-r.*taoa.*p).*2 ;
+Tdb= taob.*(r-1).^2./(1-r.*taob.*p).*2 ;
+Tdc= taoc.*(r-1).^2./(1-r.*taoc.*p).*2 ;
+%ttt = (abs((1-r).^2.*taob.^0.5.*p./(1-r.*taob.*p))).^2;
+plot(v,Tda/0.02655,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,Tdb/0.02655,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,Tdc/0.02655,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+legend('pump=xx','pump=x','pump=xxx')
+%plot(v,TTT,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Tran_Response');hold on;

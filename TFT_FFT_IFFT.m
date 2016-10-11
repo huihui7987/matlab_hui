@@ -22,8 +22,9 @@ f_bas = -(N-1)/2*f_interval:f_interval:(N-1)/2*f_interval; %频域序列
 %x_in_bas = sin(2*pi*t*0.2); 
 x_in_bas = sin(t);% 
 %x_in_bas = sin(t).^2.*cos(t).*t;
-xF_in_bas = fftshift(fft(x_in_bas)); 
-
+%xF_in_bas = fftshift(fft(x_in_bas)); 
+xF_in_bas = fft(x_in_bas); 
+test_out = ifft(xF_in_bas);
 %%%%%%%%% 
 w=2*pi*f_bas;%~~~~  
 hF = (1i.*w);%~~~~ 有点像微分器传递函数
@@ -32,7 +33,7 @@ hF = (1i.*w);%~~~~ 有点像微分器传递函数
 xF_out_bas = xF_in_bas.*hF;%~~~~ %微分输出
 
 %%%%%%%%% 
-x_out_bas = ifft(ifftshift(xF_out_bas));%~~~~ 微分结果时域
+x_out_bas = ifft((xF_out_bas));%~~~~ 微分结果时域
 
 %%%%%%%%% 
 x_out_diff_test = [diff(x_in_bas), 0]./t_interval;
@@ -51,7 +52,7 @@ subplot(3,2,3)
 plot(f_bas,abs(xF_out_bas))
 title('频域输出');
 subplot(3,2,4)
-plot(t,x_out_bas)
+plot(t,real(x_out_bas))
 title('时域输出');
 subplot(3,2,5)
 plot(f_bas,abs(xF_in_bas))
@@ -68,6 +69,7 @@ title('微分器幅度');
 subplot(3,2,2)
 plot(f_bas,angle(hF)./pi)
 title('微分器相位');
-
+figure;
+plot(t,test_out)
 
 
