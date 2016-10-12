@@ -107,6 +107,7 @@ t=0:dt:time_window;     %采样时间
 figure;
 gauss_time=exp(-0.5*(2*sqrt(2*log(2))*(t-2.5e-9)/FWHM).^2); %高斯脉冲，中心位于2.5ns处。
 plot(t*1e+9,gauss_time,'linewidth',2.5);
+%以上，画图不美观，原因取点数太少
 xlabel('Time/ns');
 ylabel('Amplitude/V');
 title('Gauss pulse');
