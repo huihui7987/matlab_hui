@@ -3,8 +3,8 @@ clear;
 
 
 FWHM=62e-12;            %高斯信号FWHM宽度，为50ps
-time_window=5000*FWHM;   %高斯信号的采样窗口宽度，该值决定了傅里叶变换后的频率分辨率
-Ns=8001;                %采样点
+time_window=3000*FWHM;   %高斯信号的采样窗口宽度，该值决定了傅里叶变换后的频率分辨率
+Ns=1001;                %采样点
 dt=time_window/(Ns-1);  %采样时间间隔
 t=0:dt:time_window;     %采样时间
 
@@ -29,36 +29,46 @@ k=floor(-(Ns-1)/2:(Ns-1)/2);
 double_f=k*df;   %双边频谱对应的频点
 %plot(double_f*1e-9,(gauss_spec),'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('Tdaa');title('gauss_spec');hold
 
-kk1 = 1./((1i*2*pi*double_f*1e-9)+0.016);
-kk2 = 1./((1i*2*pi*double_f*1e-9)+0.025);
-kk3 = 1./((1i*2*pi*double_f*1e-9)+0.035);
-kk4 = 1./((1i*2*pi*double_f*1e-9)+0.045);
-kk5 = 1./((1i*2*pi*double_f*1e-9)+0.055);
-kk6 = 1./((1i*2*pi*double_f*1e-9)+0.065);
-% figure;
-% plot(double_f*1e-9,kk1,'r','linewidth',2.5); xlabel('Frequency(Hz）');ylabel('kk1-Intensity Transmission H1');hold on;
-% figure;
+kk1 = 1./((1i*2*pi*double_f*1e-9)+0.038);
+kk2 = 1./((1i*2*pi*double_f*1e-9)+0.054);
+kk3 = 1./((1i*2*pi*double_f*1e-9)+0.070);
+kk4 = 1./((1i*2*pi*double_f*1e-9)+0.084);
+kk5 = 1./((1i*2*pi*double_f*1e-9)+0.15);
+kk6 = 1./((1i*2*pi*double_f*1e-9)+3);
+figure;
+plot(double_f*1e-9,angle(kk1),'r','linewidth',2.5); xlabel('Frequency(Hz）');ylabel('kk1-Intensity Transmission H1');hold on;
+figure;
+
+res_rr = abs(kk6.^2);
+plot(double_f*1e-9,res_rr/342.9,'r','linewidth',2.5); xlabel('Frequency(Hz）');ylabel('kk1-Intensity Transmission H1');hold on;
+
+
+
 hh1 = gauss_spec .* kk1;
 % plot(double_f*1e-9,abs(hh),'r','linewidth',2.5); xlabel('Frequency(Hz）');ylabel('Intensity Transmission H1');hold on;
 figure;
-hht1 = abs(ifft(hh1))/(8.306e-6);
+hht1 = abs(ifft(hh1))/1.603e-6;
 hh2 = gauss_spec .* kk2;
-hht2 = abs(ifft(hh2))/(8.306e-6);
+hht2 = abs(ifft(hh2))/1.603e-6;
 hh3 = gauss_spec .* kk3;
-hht3 = abs(ifft(hh3))/(8.306e-6);
+hht3 = abs(ifft(hh3))/1.603e-6;
 hh4 = gauss_spec .* kk4;
-hht4 = abs(ifft(hh4))/(8.306e-6);
+hht4 = abs(ifft(hh4))/1.603e-6;
 hh5 = gauss_spec .* kk5;
-hht5 = abs(ifft(hh5))/(8.306e-6);
+hht5 = abs(ifft(hh5))/1.603e-6;
 hh6 = gauss_spec .* kk6;
-hht6 = abs(ifft(hh6))/(8.306e-6);
+hht6 = abs(ifft(hh6))/1.603e-6;
 plot(t*1e+9,abs(hht1),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
 plot(t*1e+9,abs(hht2),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
 plot(t*1e+9,abs(hht3),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
 plot(t*1e+9,abs(hht4),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
 plot(t*1e+9,abs(hht5),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
 plot(t*1e+9,abs(hht6),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
-legend('k=0.016','k=0.020','k=0.025','k=0.030','k=0.035','k=0.040')
-
-
-
+legend('k=0.038','k=0.054','k=0.070','k=0.084','k=0.15','k=0.25')
+figure;
+hf1 = gauss_spec .* abs(kk1);
+hf2 = abs(ifft(hf1));
+hf3 = gauss_spec .* abs(kk5);
+hf4 = abs(ifft(hf3));
+plot(t*1e+9,abs(hf2),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
+plot(t*1e+9,abs(hf4),'linewidth',2.5);xlabel('Time(ps）');ylabel('Intensity(a.u.)');hold on;
