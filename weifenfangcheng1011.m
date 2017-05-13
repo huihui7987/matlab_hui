@@ -99,9 +99,9 @@ Tda= taoa.*(r-1).^2./(1-r.*taoa.*p).*2 ;
 Tdb= taob.*(r-1).^2./(1-r.*taob.*p).*2 ;
 Tdc= taoc.*(r-1).^2./(1-r.*taoc.*p).*2 ;
 %ttt = (abs((1-r).^2.*taob.^0.5.*p./(1-r.*taob.*p))).^2;
-plot(v,Tda/0.1642,'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
-plot(v,Tdb/0.1642,'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
-plot(v,Tdc/0.1642,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,Tda/(1.096e-7),'r','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,Tdb/(1.096e-7),'b','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
+plot(v,Tdc/(1.096e-7),'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Intensity Transmission');hold on;
 legend('pump=xx','pump=x','pump=xxx')
 %plot(v,TTT,'g','linewidth',2); xlabel('Frequency(Hz£©');ylabel('Tran_Response');hold on;
 %%ÀíÏëÍ¸ÉäÆ×

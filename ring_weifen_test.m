@@ -28,7 +28,7 @@ k=floor(-(Ns-1)/2:(Ns-1)/2);
 % k=0:Ns-1;
 double_f=k*df;   %双边频谱对应的频点
 
-%plot(double_f*1e-9,gauss_spec,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('Tdaa');title('gau');hold on;
+plot(double_f*1e-9,gauss_spec,'r','linewidth',2.5); xlabel('Frequency(GHz）');ylabel('Tdaa');title('gau');hold on;
 %%
 
 R=50e-6;

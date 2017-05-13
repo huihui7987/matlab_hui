@@ -6,6 +6,13 @@ Ns=601;                %采样点
 dt=time_window/(Ns-1);  %采样时间间隔
 t=0:dt:time_window;     %采样时间
 
+kk = fftshift((2*pi/time_window).*[(-Ns/2):(Ns/2-1)]);
+lambda0 = 1450e-9;
+f0=3e8./lambda0;
+omega0 = 2*pi*f0;
+lamd = 2*pi*3e8./(kk+omega0);
+
+
 % n1=1.5;
 % n2=0.66;
 % n3=1.5;
@@ -17,22 +24,22 @@ ylabel('Amplitude/V');
 title('Gauss pulse');
 
 %===========以下计算双边谱、双边功率谱、双边功率谱密度=================
-gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
-%gauss_spec=fftshift(gauss_time); 
+%gauss_spec=fftshift(fft(ifftshift(gauss_time)));    %傅里叶变换，并且进行移位操作。
+gauss_spec=fftshift(ifft(gauss_time)); 
 gauss_spec=gauss_spec/Ns;   %求实际的幅度值；归一化？
 df=1/time_window;               %频率分辨率
 k=floor(-(Ns-1)/2:(Ns-1)/2);    
 % k=0:Ns-1;
 double_f=k*df;   %双边频谱对应的频点
 
-% figure;
-% 
-% plot(double_f*1e-9,gauss_spec,'linewidth',2.5);
-% figure; %幅度谱
-% plot(double_f*1e-9,abs(gauss_spec),'linewidth',2.5);
-% xlabel('Frequency/GHz');
-% ylabel('Amplitude/V');
-% title('double Amplitude spectrum');
+%figure;
+
+%plot(double_f*1e-9,gauss_spec,'linewidth',2.5);
+figure; %幅度谱
+plot(fftshift(lamd),abs(real(gauss_spec)),'linewidth',2.5);
+xlabel('Frequency/GHz');
+ylabel('Amplitude/V');
+title('double Amplitude spectrum');
 % 
 % 
 % figure; %相位谱
@@ -45,12 +52,12 @@ figure; %高斯脉冲功率谱
 double_power_spec_W=abs(gauss_spec).^2;                 %双边功率谱，单位W；
 double_power_spec_mW=double_power_spec_W*1e+3;          %双边功率谱，单位mW；
 double_power_spec_dBm=10*log10(double_power_spec_mW);   %双边功率谱，单位dBm；
-plot(double_f*1e-9,double_power_spec_mW/0.1132,'linewidth',2.5);
+plot(fftshift(lamd),double_power_spec_mW/0.1132,'linewidth',2.5);
 xlabel('Frequency/GHz');
 ylabel('Power/dBm');
 title('double Power spectrum');
 figure;
-
+%plot(fftshift(lamd),Aw_dB,'b--','linewidth',2);hold on;
 
 %%%%%%%%%%%%%%%%%
 %%理想微分器传输函数
@@ -155,7 +162,7 @@ plot(double_f*1e-9,MRR_gauss_diff,'g','linewidth',2.5);title('模型微环输出频谱')
 
 R=50e-6;
 lamda=1439.2e-9:1e-12:1439.8e-9;
-v=(3e8./lamda)-(3e8./1439.5e-9);
+v=(3e8./lamda)%-(3e8./1439.5e-9);
 neff=3.17995709;
 %neff=3.17996;
 r=0.83;
@@ -262,7 +269,7 @@ legend('Input','ideal n=0.4','Ring based n=0.4')
 %%%1阶%%%%%%%%
 %%1阶理想
 figure;
-idea_t_c = ifft(idea_gauss_diff_c);
+idea_t_c = ifftshift(idea_gauss_diff_c);
 plot(t*1e+9,idea_t_c,'linewidth',2.5);
 
 

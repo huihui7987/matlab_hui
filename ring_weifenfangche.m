@@ -42,7 +42,7 @@ Lc = R;
 L = 2*pi*R;
 phi = mod(L*neff./lamda*2*pi,2*pi);%~~~~-
 p=exp(1i*phi/2);
-taoa=0.9999;
+taoa=0.99999;
 
 figure;
 %Tdaa= taoa.*(r-1)./(1-r.*taoa.*p) ;
